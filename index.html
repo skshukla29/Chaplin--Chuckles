@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chaplin Chuckles</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-cover" style="background-image: url('Charlie%20Chaplin%20funny%20face.jpeg');">
+  <header class="bg-black absolute top-0 w-full h-16 shadow-lg p-4 flex justify-center items-center text-white">
+    <h1>Chaplin Chuckles</h1>
+  </header>
+
+  <div id="jokeBox" class="bg-cover max-w-md mx-auto mt-24 border-2 border-black shadow-lg p-8 rounded-lg flex flex-col justify-center items-center ml-10 bg-white bg-opacity-70">
+    <label for="lang" class="mb-2 font-semibold">Select Language:</label>
+    <select id="lang" class="mb-4 px-3 py-1 border rounded">
+      <option value="english">English</option>
+      <option value="hindi">Hindi</option>
+    </select>
+
+    <p id="setup" class="font-light text-lg text-center"></p>
+    <p id="punch" class="font-light text-lg mt-4 text-center"></p>
+    <button id="jokeButton" class="mt-4 bg-black text-white rounded-lg px-4 py-2" onclick="getJoke()">New Joke</button>
+  </div>
+
+  <footer class="absolute bottom-0 w-full bg-black p-4 text-white text-center">
+    Made by Shashikant Shukla
+  </footer>
+
+  <script>
+    async function getJoke() {
+      const lang = document.getElementById('lang').value;
+      const setupEl = document.getElementById('setup');
+      const punchEl = document.getElementById('punch');
+
+      if (lang === "english") {
+        try {
+          const response = await fetch('https://official-joke-api.appspot.com/random_joke');
+          const data = await response.json();
+          setupEl.innerText = data.setup;
+          punchEl.innerText = data.punchline;
+        } catch (err) {
+          setupEl.innerText = "Failed to fetch English joke.";
+          punchEl.innerText = "";
+        }
+      } else {
+        try {
+          const response = await fetch('https://run.mocky.io/v3/cb0a5562-ffbb-437f-89fc-818efa6958eb');
+          const jokes = await response.json();
+          const randomIndex = Math.floor(Math.random() * jokes.length);
+          const joke = jokes[randomIndex];
+          setupEl.innerText = joke.setup;
+          punchEl.innerText = joke.punchline;
+        } catch (err) {
+          setupEl.innerText = "Failed to fetch Hindi joke.";
+          punchEl.innerText = "";
+        }
+      }
+    }
+
+    window.onload = getJoke;
+  </script>
+</body>
+</html>
